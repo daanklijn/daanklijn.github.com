@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="bg-slate-200 font-mono text-slate-600">
   <head>
     <meta charset="UTF-8" />
@@ -6,28 +6,109 @@
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   </head>
   <body>
-	<div class="flex justify-center">
-	<div class="max-w-xl mt-20">
-	<div class='text-4xl'>
-	  Pitch shifting audio samples through granular synthesis 
-	  <a class="text-xl text-slate-400" href='/'>[back]</a>
-	</div>
-		<div class='text-2xl mt-2 text-slate-400'>March 5, 2025</div>
+    <div class="flex justify-center">
+      <div class="max-w-xl mt-20 mx-8">
+        <div class="text-4xl">
+          Pitch shifting audio samples through granular synthesis
+          <a class="text-xl text-slate-400" href="/">[back]</a>
+        </div>
+        <div class="text-2xl mt-2 text-slate-400">March 5, 2025</div>
 
-		<div class='text-md mt-4'>
-		  I'm currently in the process of designing a new digital drum synthesizer. 
-		  One of its requirements is that it needs to be capable of pitch shifting certain drum samples.
-		  This blog post explores one of the simpler pitch shifting algorithms, and tries to find out whether it meets the needs of my synthesizer.
-	  
-		  <br>
-		  <br>
-		  ...
-		  
-		  
+        <div class="text-md mt-4">
+          I'm currently in the process of designing a new digital drum
+          synthesizer. One of its requirements is that it needs to be capable of
+          pitch shifting certain drum samples. This blog post explores one of
+          the simpler pitch shifting algorithms, and tries to find out whether
+          it meets the needs of my synthesizer.
 
-		</div>
-	</div>
-	</div>
+          <br />
+          <br />
 
+          For illustrative purposes we will be using the following 909 Bass Drum
+          sample throughout this blog post. The pitch hasn't been altered so
+          far.
+
+          <div class="my-8 flex justify-center">
+            <audio controls>
+              <source src="/static/BT0A0A7.WAV" type="audio/wav" />
+            </audio>
+          </div>
+
+          We can decrease the pitch of this sample by simply stretching it over a
+          longer time period. Or we can increase its pitch by compressing it
+          into a shorter time period. <br /><br />
+
+          <div class="flex justify-center mb-8 items-center">
+            <div class="mr-4">Stretch-factor:</div>
+            <div>
+              <input
+                id="playback-rate"
+                type="range"
+                value="1.0"
+				min="0.5"
+				max="1.5"
+				step="0.01"
+                class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+            <div>
+              <button onclick="playSampleWithPlaybackRate()"
+                class="ml-4 bg-slate-400 text-white p-2 rounded-md cursor-pointer"
+              >
+                Play
+              </button>
+            </div>
+          </div>
+
+          While this does work, there is one unwanted side-effect: <br />
+          <b>the sample's length changes as well</b>.
+
+          <br /><br />
+          ...
+        </div>
+      </div>
+      <script>
+        async function playSampleWithPlaybackRate() {
+			console.log('playing...')
+          try {
+            // 1. Create an AudioContext
+            const audioContext = new (window.AudioContext ||
+              window.webkitAudioContext)();
+
+            // 2. Fetch the audio file
+            const response = await fetch("/static/BT0A0A7.WAV");
+            const arrayBuffer = await response.arrayBuffer();
+
+            // 3. Decode the audio data
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            // 4. Create a BufferSource node
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+
+            // 5. Connect the source to the destination (speakers)
+            source.connect(audioContext.destination);
+
+            // 6. Set the playback rate
+			const rateInput = document.getElementById('playback-rate');
+			const rate = parseFloat(rateInput.value);
+            source.playbackRate.value = rate;
+
+            // 7. Start playback
+            source.start();
+
+            // Optional: Handle source ended event (for cleanup or restarting)
+            source.onended = () => {
+              console.log("Sample playback finished.");
+            };
+
+            return source; // Return the source node, useful for further manipulation
+          } catch (error) {
+            console.error("Error loading or playing audio:", error);
+          }
+        }
+        playSampleWithPlaybackRate();
+      </script>
+    </div>
   </body>
 </html>
