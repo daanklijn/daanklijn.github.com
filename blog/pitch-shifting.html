@@ -34,8 +34,8 @@
             </audio>
           </div>
 
-          We can decrease the pitch of this sample by simply stretching it over a
-          longer time period. Or we can increase its pitch by compressing it
+          We can decrease the pitch of this sample by simply stretching it over
+          a longer time period. Or we can increase its pitch by compressing it
           into a shorter time period. <br /><br />
 
           <div class="flex justify-center mb-8 items-center">
@@ -45,14 +45,16 @@
                 id="playback-rate"
                 type="range"
                 value="1.0"
-				min="0.5"
-				max="1.5"
-				step="0.01"
+                min="0.5"
+                max="1.5"
+                step="0.01"
                 class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+                onchange="onPlaybackSliderChange()"
               />
             </div>
             <div>
-              <button onclick="playSampleWithPlaybackRate()"
+              <button
+                onclick="playSampleWithPlaybackRate()"
                 class="ml-4 bg-slate-400 text-white p-2 rounded-md cursor-pointer"
               >
                 Play
@@ -60,54 +62,508 @@
             </div>
           </div>
 
+          <div class="flex justify-center mb-8">
+            <canvas
+              id="canvas-1"
+              class="bg-slate-300 w-1/2 rounded-md"
+            ></canvas>
+          </div>
+
           While this does work, there is one unwanted side-effect: <br />
           <b>the sample's length changes as well</b>.
 
           <br /><br />
-          ...
+		  
+		  This can be side-effect can be avoid by using proper pitch shifting methods.
+		  One of the simpler ones is Overlap Add (OLA). 
+			
+		  <br>
+		  <br>
+
+
+		  Overlap Add first divides a given sample into a number of windows. Each
+		  of these windows overlaps for a certain amount with the other windows.
+
+          <div class="flex justify-center mt-8 items-center">
+            <div class="mr-4">Window size:</div>
+            <div>
+              <input
+                id="window-slider"
+                type="range"
+                value="50"
+                min="5"
+                max="250"
+                step="5"
+                class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+                onchange="onWindowOverlapChange()"
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-center mb-8 items-center">
+            <div class="mr-4">Overlap:</div>
+            <div>
+              <input
+                id="overlap-slider"
+                type="range"
+                value="0.0"
+                min="0.00"
+                max="0.50"
+                step="0.01"
+                class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+                onchange="onWindowOverlapChange()"
+              />
+            </div>
+          </div>
+
+
+          <div class="flex justify-center mb-8">
+            <canvas
+              id="canvas-2"
+              class="bg-slate-300 w-1/2 rounded-md"
+            ></canvas>
+          </div>
+
+
+		  To make the sample shorter or longer these windows are then moved away from each other or pushed into each other.
+
+          <div class="flex justify-center my-8 items-center">
+            <div class="mr-4">Sample length:</div>
+            <div>
+              <input
+                id="example-3-slider"
+                type="range"
+                value="0.25"
+                min="0.0"
+                max="0.5"
+                step="0.01"
+                class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+                onchange="onExampleThreeChange()"
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-center mb-8">
+            <canvas
+              id="canvas-3"
+              class="bg-slate-300 w-1/2 rounded-md"
+            ></canvas>
+          </div>
+
+		  As you can see above, this roughly worked. The sample is stretched over time while the pitch is 
+		  not affected much. However, the sample has become quite a bit louder and contains some artifacts.
+		  This is because the overlapping parts of the windows are being added together, resulting in a 
+		  signal much higher than the original sample.
+		  <br>
+		  <br>
+
+
+		  To counter this issue, the Overlap Add method cross-fades each of the overlapping windows.
+		  This is done by multiplying them by the <a href="https://en.wikipedia.org/wiki/Hann_function">Hann Function</a>.
+
+          <div class="flex justify-center my-8 items-center">
+            <div class="mr-4">Sample length:</div>
+            <div>
+              <input
+                id="example-4-slider"
+                type="range"
+                value="0.25"
+                min="0.0"
+                max="0.5"
+                step="0.01"
+                class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+                onchange="onExampleFourChange()"
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-center my-8">
+            <canvas
+              id="canvas-4"
+              class="bg-slate-300 w-1/2 rounded-md"
+            ></canvas>
+          </div>
+
+		  One final step remains to turn this into a pitch shifter. 
+		  As the pitch is more or less the same, while the length of the sample can be altered using Overlap Add,
+		  we now need to compress / stretch the previous output back to it's original size.
+
+          <div class="flex justify-center my-8 items-center">
+            <div class="mr-4">Pitch:</div>
+            <div>
+              <input
+                id="example-5-slider"
+                type="range"
+                value="0.25"
+                min="0.0"
+                max="0.5"
+                step="0.01"
+                class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+                onchange="onExampleFiveChange()"
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-center mb-8">
+            <canvas
+              id="canvas-5"
+              class="bg-slate-300 w-1/2 rounded-md"
+            ></canvas>
+          </div>
+
+          <!-- <div class="flex justify-center mb-8 items-center">
+            <div class="mr-4">Pitch:</div>
+            <div>
+              <input
+                id="pitch-slider"
+                type="range"
+                value="1.0"
+                min="0.5"
+                max="1.5"
+                step="0.01"
+                class="w-full h-2 bg-slate-400 rounded-lg appearance-none cursor-pointer"
+                onchange=""
+              />
+            </div>
+            <div>
+              <button
+                onclick="playOverLapAddSample()"
+                class="ml-4 bg-slate-400 text-white p-2 rounded-md cursor-pointer"
+              >
+                Play
+              </button>
+            </div>
+          </div>
+
+          <div class="flex justify-center mb-8">
+            <canvas
+              id="canvas-8"
+              class="bg-slate-300 w-1/2 rounded-md"
+            ></canvas>
+          </div> -->
         </div>
       </div>
       <script>
-        async function playSampleWithPlaybackRate() {
-			console.log('playing...')
+        async function getAudioBuffer(filePath) {
           try {
-            // 1. Create an AudioContext
             const audioContext = new (window.AudioContext ||
               window.webkitAudioContext)();
 
-            // 2. Fetch the audio file
             const response = await fetch("/static/BT0A0A7.WAV");
             const arrayBuffer = await response.arrayBuffer();
 
-            // 3. Decode the audio data
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-            // 4. Create a BufferSource node
-            const source = audioContext.createBufferSource();
-            source.buffer = audioBuffer;
-
-            // 5. Connect the source to the destination (speakers)
-            source.connect(audioContext.destination);
-
-            // 6. Set the playback rate
-			const rateInput = document.getElementById('playback-rate');
-			const rate = parseFloat(rateInput.value);
-            source.playbackRate.value = rate;
-
-            // 7. Start playback
-            source.start();
-
-            // Optional: Handle source ended event (for cleanup or restarting)
-            source.onended = () => {
-              console.log("Sample playback finished.");
-            };
-
-            return source; // Return the source node, useful for further manipulation
+            return audioBuffer;
           } catch (error) {
-            console.error("Error loading or playing audio:", error);
+            console.error("Error loading audio:", error);
           }
         }
-        playSampleWithPlaybackRate();
+
+        function getSliderValue(inputId) {
+          const rateInput = document.getElementById(inputId);
+          return parseFloat(rateInput.value);
+        }
+
+		async function onExampleThreeChange() {
+			const sampleLength = getSliderValue('example-3-slider');
+			const sampleLengthValue = Math.round(sampleLength*100);
+			const overlap = 0.5;
+			const windowLength = 1000;
+
+			const audioBuffer = await getAudioBuffer("/static/BT0A0A7.WAV");
+			const inputSample = audioBuffer.getChannelData(0); // Get left channel data
+
+			const windows = [];
+
+			let i=0;
+			while(i<inputSample.length){
+				const currentWindow = inputSample.slice(i, i+windowLength);
+				windows.push(Array.from(currentWindow));
+				i+=windowLength-overlap*windowLength;
+			}
+
+			const outputSample = [];
+			let outputIndex = 0;
+
+			for(const window of windows){
+				for(let j=0; j<windowLength; j++){
+					if(!outputSample[outputIndex]) outputSample[outputIndex] = 0.0;
+					outputSample[outputIndex] += window[j]
+					outputIndex++;
+				}
+				outputIndex-=overlap*windowLength*sampleLength*4;
+			}
+			
+
+			drawWaveformFromArray("canvas-3",outputSample, 1.0);
+			playFromBuffer(outputSample);
+		}
+
+		async function onExampleFourChange() {
+			const sampleLength = getSliderValue('example-4-slider');
+			const sampleLengthValue = Math.round(sampleLength*100);
+			const overlap = 0.5;
+			const windowLength = 1000;
+
+			const windowFunc = new Float32Array(windowLength);
+			for (let i = 0; i < windowLength; i++) {
+				windowFunc[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / windowLength));
+			}
+
+			const audioBuffer = await getAudioBuffer("/static/BT0A0A7.WAV");
+			const inputSample = audioBuffer.getChannelData(0); // Get left channel data
+
+			const windows = [];
+
+			let i=0;
+			while(i<inputSample.length){
+				const currentWindow = inputSample.slice(i, i+windowLength);
+				windows.push(Array.from(currentWindow));
+				i+=windowLength-overlap*windowLength;
+			}
+
+			const outputSample = [];
+			let outputIndex = 0;
+
+			for(const window of windows){
+				for(let j=0; j<windowLength; j++){
+					if(!outputSample[outputIndex]) outputSample[outputIndex] = 0.0;
+					outputSample[outputIndex] += window[j] * windowFunc[j];
+					outputIndex++;
+				}
+				outputIndex-=overlap*windowLength*sampleLength*4;
+			}
+			
+
+			drawWaveformFromArray("canvas-4",outputSample, 1.0);
+			playFromBuffer(outputSample);
+		}
+
+		async function onExampleFiveChange() {
+			const sampleLength = getSliderValue('example-5-slider');
+			const sampleLengthValue = Math.round(sampleLength*100);
+			const overlap = 0.5;
+			const windowLength = 1000;
+
+			const windowFunc = new Float32Array(windowLength);
+			for (let i = 0; i < windowLength; i++) {
+				windowFunc[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / windowLength));
+			}
+
+			const audioBuffer = await getAudioBuffer("/static/BT0A0A7.WAV");
+			const inputSample = audioBuffer.getChannelData(0); // Get left channel data
+
+			const windows = [];
+
+			let i=0;
+			while(i<inputSample.length){
+				const currentWindow = inputSample.slice(i, i+windowLength);
+				windows.push(Array.from(currentWindow));
+				i+=windowLength-overlap*windowLength;
+			}
+
+			const outputSample = [];
+			let outputIndex = 0;
+
+			for(const window of windows){
+				for(let j=0; j<windowLength; j++){
+					if(!outputSample[outputIndex]) outputSample[outputIndex] = 0.0;
+					outputSample[outputIndex] += window[j] * windowFunc[j];
+					outputIndex++;
+				}
+				outputIndex-=overlap*windowLength*sampleLength*4;
+			}
+
+			const scaledOutput = []
+
+			for(let j=0; j<inputSample.length; j++){
+				const translatedIndex = Math.round(outputSample.length / inputSample.length * j);
+				scaledOutput[j] = outputSample[translatedIndex];
+			}
+
+			drawWaveformFromArray("canvas-5",scaledOutput, 1.0);
+			playFromBuffer(scaledOutput);
+		}
+
+        async function playSampleWithPlaybackRate() {
+          const audioBuffer = await getAudioBuffer("/static/BT0A0A7.WAV");
+          const audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+
+          const source = audioContext.createBufferSource();
+          source.buffer = audioBuffer;
+          source.connect(audioContext.destination);
+          source.playbackRate.value = getSliderValue("playback-rate");
+
+          source.start();
+        }
+
+        async function onPlaybackSliderChange() {
+          const audioBuffer = await getAudioBuffer("/static/BT0A0A7.WAV");
+          const playbackRate = getSliderValue("playback-rate");
+          drawWaveform("canvas-1", audioBuffer, playbackRate);
+        }
+
+		function drawWaveform(canvasId, audioBuffer, playbackRate){
+			drawWaveformFromArray(canvasId, audioBuffer.getChannelData(0), playbackRate);
+		}
+
+        function drawWaveformFromArray(canvasId, array, playbackRate=1.0) {
+          const canvas = document.getElementById(canvasId);
+          const ctx = canvas.getContext("2d");
+
+          const channelData = array;
+          const canvasWidth = canvas.width;
+          const canvasHeight = canvas.height;
+          const dataLength = channelData.length;
+
+          ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+          ctx.strokeStyle = "#314158"; // Waveform color
+          ctx.beginPath();
+
+          const sliceWidth = 0.01;
+          let x = 0;
+
+          for (let i = 0; i < dataLength; i++) {
+            const v = (channelData[i] * canvasHeight) / 2; // Scale the audio data to canvas height
+            const y = canvasHeight / 2 + v;
+
+            if (i === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+
+            x += sliceWidth;
+          }
+
+          ctx.lineTo(canvasWidth, canvasHeight / 2); // Draw to the end
+          ctx.strokeStyle = "#314158"; // Waveform color
+          ctx.stroke();
+        }
+
+
+		async function onWindowOverlapChange(){
+			const overlap = getSliderValue('overlap-slider');
+			const windowLength = getSliderValue('window-slider');
+
+			const audioBuffer = await getAudioBuffer("/static/BT0A0A7.WAV");
+			const channelData = audioBuffer.getChannelData(0); // Get left channel data
+			drawWaveform('canvas-2', audioBuffer, 0.5);
+			drawWindows('canvas-2', overlap, windowLength, channelData.length);
+		}
+
+		function drawWindows(canvasId, overlap, windowLength, sampleLength){
+			const canvas = document.getElementById(canvasId);
+			const ctx = canvas.getContext("2d");
+
+			const canvasWidth = canvas.width;
+			const canvasHeight = canvas.height;
+
+			let x = 1;
+			while(x <= canvasWidth){
+				ctx.beginPath();    
+				ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
+				ctx.rect(x, 0, windowLength, canvasHeight)
+				ctx.fill();
+				ctx.beginPath();    
+				ctx.strokeStyle = "blue";
+				ctx.moveTo(x,0)
+				ctx.lineTo(x,canvasHeight);
+				ctx.moveTo(x+windowLength,0)
+				ctx.lineTo(x+windowLength,canvasHeight);
+				ctx.stroke();
+				x+= windowLength - (windowLength*overlap);
+			}
+
+		}
+
+		async function playOverLapAddSample(){
+          const audioBuffer = await getAudioBuffer("/static/BT0A0A7.WAV");
+		  console.log(audioBuffer.sampleRate);
+          const shiftFactor = getSliderValue("pitch-slider");
+
+		  const shiftedBuffer = overlapAddPitchShift(audioBuffer, shiftFactor);
+          drawWaveform("canvas-8", shiftedBuffer , 1.0);
+		  playFromBuffer(shiftedBuffer.getChannelData(0));
+		}
+
+		async function playFromBuffer(buffer){
+          const audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+          const outputBuffer = audioContext.createBuffer(
+            1,
+            buffer.length,
+			44100
+          );
+		  outputData = outputBuffer.getChannelData(0);
+		  for(let i=0; i<buffer.length; i++){
+			outputData[i] = buffer[i];
+		  }
+          const source = audioContext.createBufferSource();
+          source.buffer = outputBuffer;
+          source.connect(audioContext.destination);
+          source.start();
+		  source.onended = () => audioContext.close();
+		}
+
+
+        function overlapAddPitchShift(
+          audioBuffer,
+          shiftFactor,
+          windowSize = 222,
+          overlapFactor = 0.60
+        ) {
+          const context = new AudioContext();
+          const sampleRate = audioBuffer.sampleRate;
+          const channelData = audioBuffer.getChannelData(0); // Assuming mono audio
+          const outputBuffer = context.createBuffer(
+            1,
+            audioBuffer.length,
+            sampleRate
+          );
+          const outputData = outputBuffer.getChannelData(0);
+
+          const hopSize = windowSize * (1 - overlapFactor);
+          const outputHopSize = hopSize / shiftFactor;
+
+          const window = new Float32Array(windowSize);
+          for (let i = 0; i < windowSize; i++) {
+            window[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / windowSize)); // Hann window
+          }
+
+          let inputPos = 0;
+          let outputPos = 0;
+
+          while (inputPos + windowSize <= channelData.length) {
+            const inputFrame = channelData.slice(
+              inputPos,
+              inputPos + windowSize
+            );
+            const outputFrame = new Float32Array(windowSize);
+
+            for (let i = 0; i < windowSize; i++) {
+              outputFrame[i] = inputFrame[i] * window[i];
+            }
+
+            for (let i = 0; i < windowSize; i++) {
+              if (outputPos + i < outputData.length) {
+                outputData[Math.round(outputPos + i)] += outputFrame[i] * window[i];
+              }
+            }
+
+            inputPos += hopSize;
+            outputPos += outputHopSize;
+          }
+
+          return outputBuffer;
+        }
+
+        onPlaybackSliderChange();
+		onWindowOverlapChange();
+		onExampleThreeChange();
+		onExampleFourChange();
+		onExampleFiveChange();
       </script>
     </div>
   </body>
