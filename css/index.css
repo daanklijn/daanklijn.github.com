@@ -96,6 +96,7 @@ li {
 
 a[href] {
 	color: var(--text-color-link);
+	transition: text-shadow 0.5s ease;
 }
 a[href]:visited {
 	color: var(--text-color-link-visited);
@@ -103,6 +104,7 @@ a[href]:visited {
 a[href]:hover,
 a[href]:active {
 	color: var(--text-color-link-active);
+	text-shadow: 0 0 0.09rem var(--color-gray-90);
 }
 
 main,

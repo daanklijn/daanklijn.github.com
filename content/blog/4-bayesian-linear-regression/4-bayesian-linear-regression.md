@@ -70,7 +70,7 @@ If we flipr the objective function, we end up with:
 
 $$w_{MAP} = \arg\min_{w} -\frac{1}{2\sigma^2} \|y - Xw\|^2_2 - \frac{1}{2\tau^2} \|w\|^2_2$$
 
-We now find that this is is equivalent to the optimization problem of <a href={{ridgePost}}>Ridge regression</a> where $\lambda =  \frac{1}{2\tau^2}$. This is because the Ridge regression model is equivalent to a linear regression model with a prior distribution that is a normal distribution with mean $0$ and variance $\tau^2$. 
+We now find that this is is equivalent to the optimization problem of <a href={{ridgePost}}>Ridge Regression</a> where $\lambda =  \frac{1}{2\tau^2}$. Both Ridge Regression and Bayesian Linear Regression solve the same problem, but their underlying philosophy is different.
 
 Both the regularization term and the prior distribution enforce a constraint on the weights that forces them to be small:
 -  a large $\lambda$ forces the weights to be smaller
