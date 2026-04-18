@@ -43,3 +43,15 @@ pre[class*="language-diff-"] {
 	text-decoration: none; /* override del, ins, mark defaults */
 	color: inherit; /* override del, ins, mark defaults */
 }
+
+code[class*="language-"], pre[class*="language-"] {
+	background-color: #eeeeee;
+}
+
+.token.operator {
+	background-color: transparent;
+}
+
+pre[class*="language-"] {
+	border: solid 1px #bbb9bc;
+}

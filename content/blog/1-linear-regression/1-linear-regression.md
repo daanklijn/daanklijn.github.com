@@ -81,7 +81,7 @@ Finally, we plot the data and the polynomial we found.
 
 
 <div class="img-container">
-<img src="./polynomial_regression.png" alt="Polynomial regression" >
+<img src="./linear_regression.png" alt="Polynomial regression" >
 </div>
 
 A Jupyter notebook containing the full code can be found <a href="./notebooks_linear_regression.ipynb" download>here</a>.
