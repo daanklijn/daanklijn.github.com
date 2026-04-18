@@ -1,6 +1,7 @@
 /* Defaults */
 :root {
-	--font-family: -apple-system, system-ui, sans-serif;
+	/* --font-family: -apple-system, system-ui, sans-serif; */
+	--font-family: 'EB Garamond', serif;
 	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
 }
 
@@ -12,26 +13,16 @@
 
 	--background-color: #fff;
 
-	--text-color: var(--color-gray-90);
-	--text-color-link: #082840;
-	--text-color-link-active: #5f2b48;
-	--text-color-link-visited: #17050F;
+	--text-color: #1a1a18;
+	--text-color-link: #1a1a18;
+	--text-color-link-active: #1a1a18;
+	--text-color-link-visited: #1a1a18;
 
 	--syntax-tab-size: 2;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--color-gray-20: #e0e0e0;
-		--color-gray-50: #C0C0C0;
-		--color-gray-90: #dad8d8;
-
-		/* --text-color is assigned to --color-gray-_ above */
-		--text-color-link: #1493fb;
-		--text-color-link-active: #6969f7;
-		--text-color-link-visited: #a6a6f8;
-
-		--background-color: #15202b;
 	}
 }
 
@@ -203,7 +194,8 @@ header {
 .home-link {
 	flex-grow: 1;
 	font-size: 1em; /* 16px /16 */
-	font-weight: 700;
+	font-weight: 400;
+	font-size: 50px;
 }
 .home-link:link:not(:hover) {
 	text-decoration: none;
@@ -259,7 +251,7 @@ header {
 }
 .postlist-link {
 	font-size: 1.1875em; /* 19px /16 */
-	font-weight: 700;
+	font-weight: 400;
 	flex-basis: calc(100% - 1.5rem);
 	padding-left: .25em;
 	padding-right: .5em;
@@ -296,3 +288,9 @@ header {
 	margin-right: 1em;
 }
 
+.img-container {
+	padding-top: 0;
+	padding-bottom:0 ;
+	padding-left: 4em;
+	padding-right: 4em;
+}

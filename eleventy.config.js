@@ -19,6 +19,13 @@ export default async function(eleventyConfig) {
 		}
 	});
 
+	// const markdownLibrary = markdownIt({
+	// 		html: true,
+	// 		breaks: true,
+	// 		linkify: true
+	// 	}).use(markdownItKatex);
+	// eleventyConfig.setLibrary("md", markdownLibrary);
+
 	// Copy the contents of the `public` folder to the output folder
 	// For example, `./public/css/` ends up in `_site/css/`
 	eleventyConfig
