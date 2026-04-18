@@ -46,6 +46,8 @@ pre[class*="language-diff-"] {
 
 code[class*="language-"], pre[class*="language-"] {
 	background-color: #eeeeee;
+	font-size: 12px;
+	line-height: 1.2;
 }
 
 .token.operator {
