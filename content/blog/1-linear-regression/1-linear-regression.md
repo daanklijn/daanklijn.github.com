@@ -44,7 +44,7 @@ $$\nabla_{w} MSE = \frac{-2}{n} X^T (Xw - y) = 0$$
 
 This gives us the optimal weights:
 
-$$w = (X^T X)^{-1} X^T y$$
+$$w_{MSE} = (X^T X)^{-1} X^T y$$
 
 The formula above is known as the normal equations.
 
