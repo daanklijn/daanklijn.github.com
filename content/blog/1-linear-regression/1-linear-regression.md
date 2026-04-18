@@ -15,7 +15,7 @@ Linear regression aims to predict a scalar *y* given a vector of inputs **x**. I
 
 $$y = w^T x + b$$
 
-Or in matrix form, where **X** is the matrix of inputs (each column is a feature) and **y** is the vector of outputs:
+Or in matrix form, where **X** is the matrix of inputs (each row is a datapoint and each column is a feature) and **y** is the vector of outputs:
 
 $$y = X w + b$$
 
@@ -29,17 +29,18 @@ $$MSE = \frac{1}{n} \sum_{i=1}^n (ŷ_i - y_i)^2$$
 
 Or in matrix form:
 
-$$MSE = \frac{1}{n} \| X w - y \|_2^2$$
+$$MSE = \frac{1}{n} \| ŷ - y \|_2^2$$
+
+$$ = \frac{1}{n} \| X w - y \|_2^2$$
+
+$$ = \frac{1}{n} (Xw - y)^T (Xw - y)$$
 
 To find the optimal weights, we need to find the values of **w** that minimize the MSE.
+To do so, we find the derivative of the MSE with respect to w and set it to zero:
 
-Since **1/n** is a constant, we can remove it and end up with the residual sum of squares:
+Gradient symbol: 
 
-$$J(w) = \|Xw - y\|_2^2 = (Xw - y)^T (Xw - y)$$
-
-To minimize J and therefore also the MSE, we find the derivative of J with respect to w and set it to zero:
-
-$$\frac{dJ}{dw} = -2X^T (Xw - y) = 0$$
+$$\nabla_{w} MSE = \frac{-2}{n} X^T (Xw - y) = 0$$
 
 This gives us the optimal weights:
 
@@ -49,9 +50,9 @@ The formula above is known as the normal equations.
 
 ## Rough Python implementation
 
-Below a simple Python implementation of a variant of the linear regression model can be found. This variant is known as polynomial linear regression, where the weights resemble the coefficients of each polynomial.
+Below a simple Python implementation of a variant of the linear regression model can be found. This variant is known as polynomial regression, where the weights resemble the coefficients of each polynomial.
 
-$$y = w_0 + w_1 x + w_2 x^2 + w_3 x^3 + \dots + w_n x^n + \epsilon$$
+$$y = w_0 + w_1 x + w_2 x^2 + \dots + w_n x^n + \epsilon$$
 
 To implement this, we first define our dataset **X** and target **y**. We let **y** be an arbitrary polynomial that we come up with and add some noise to it. **X** contains the values of **x** and its powers.
 
@@ -81,7 +82,7 @@ Finally, we plot the data and the polynomial we found.
 
 
 <div class="img-container">
-<img src="./linear_regression.png" alt="Polynomial regression" >
+<img src="./graph_1.png" alt="Polynomial regression" >
 </div>
 
 A Jupyter notebook containing the full code can be found <a href="./notebooks_linear_regression.ipynb" download>here</a>.
