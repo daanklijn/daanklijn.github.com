@@ -85,4 +85,4 @@ Finally, we plot the data and the polynomial we found.
 <img src="./graph_1.png" alt="Polynomial regression" >
 </div>
 
-A Jupyter notebook containing the full code can be found <a href="./notebooks_linear_regression.ipynb" download>here</a>.
+A Jupyter notebook containing the full code can be found <a href="/files/notebook_linear_regression.ipynb" download>here</a>.
