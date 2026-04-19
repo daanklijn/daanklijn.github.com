@@ -93,7 +93,7 @@ To get a sense of how our initial predictions look, we can plot the data and the
 <img src="./graph_1.png" alt="">
 </div>
 
-TODO: Add line on how well the model is performing.
+While the random initialization of the weights resulted in predicting some datapoints correctly, it is far from optimal.
 
 Now we use gradient descent to find more optimal weights. For each iteration, we compute the gradient of the loss function we derived earlier. We will then subtract the gradient multiplied by the learning rate from the weights so that we move closer to the minimum of the loss function.
 

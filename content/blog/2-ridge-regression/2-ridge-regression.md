@@ -69,7 +69,7 @@ xTy = np.dot(np.transpose(X), y)
 weights_ridge = np.dot(np.linalg.inv(xTxli),xTy)
 ```
 
-When inspecting the weights of the model, we can already see that the optimal weights are much smaller than the weights we found by the linear regression algorithm.
+When inspecting the weights of the model, we can already see that the optimal weights are much smaller than the weights we found for the linear regression algorithm.
 
 ```python
 >>> weights_ridge
