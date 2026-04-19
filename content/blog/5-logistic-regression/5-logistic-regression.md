@@ -65,3 +65,60 @@ Where $\alpha$ is the learning rate that determines how fast the weights are upd
 
 ## Rough Python implementation
 
+Let us first define our dataset. We will generate a dataset with 100 datapoints, with randomly distributed x values. The class y will be based on whether the x value is greater than 5. Ideally, our model should learn this relation between x and y.
+
+```python
+x = np.random.uniform(0, 10, 100)
+noise = np.random.normal(0.5, 0.5, 100)
+y = (x > 5).astype(int)
+```
+
+Similar to Polynomial Regression, we define matrix X, that contains the values of x and its powers.
+We also define the weights w, which we will initialize using a standard normal distribution.
+Finally, we compute the initial predictions y_pred.
+
+```python
+max_polynomial = 5
+
+X = np.array([x**n for n in range(0,max_polynomial)]).T
+w = np.random.standard_normal((max_polynomial))
+y_pred = sigmoid(np.dot(X,w))
+
+```
+
+To get a sense of how our initial predictions look, we can plot the data and the predictions.
+
+
+<div class="img-container">
+<img src="./graph_1.png" alt="">
+</div>
+
+TODO: Add line on how well the model is performing.
+
+Now we use gradient descent to find more optimal weights. For each iteration, we compute the gradient of the loss function we derived earlier. We will then subtract the gradient multiplied by the learning rate from the weights so that we move closer to the minimum of the loss function.
+
+```python
+learning_rate = 0.0005
+
+for i in range(10000):
+    gradient = np.dot(X.T,(y_pred - y))
+    w = w - (gradient*learning_rate)
+    y_pred = sigmoid(np.dot(X,w))
+
+```
+
+When calculating the L2 error (`np.linalg.norm(y_pred - y)`) for each iteration, we can get a sense of how well the model is converging to the optimal weights. In the graph below we can clearly see that the model improved in the first few iterations, and then reached a plateau.
+
+<div class="img-container">
+<img src="./graph_2.png" alt="">
+</div>
+
+Now lets use the weights we found to predict the class of each datapoint. 
+
+<div class="img-container">
+<img src="./graph_3.png" alt="">
+</div>
+
+Clearly we can see that the logistic regression model learned the relation between x and y, and is using that to correctly classify each data point.
+
+A Jupyter notebook containing the full code can be found <a href="/files/notebook_logistic_regression.ipynb" download>here</a>.
