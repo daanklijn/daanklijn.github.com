@@ -38,8 +38,6 @@ $$ = \frac{1}{n} (Xw - y)^T (Xw - y)$$
 To find the optimal weights, we need to find the values of **w** that minimize the MSE.
 To do so, we find the derivative of the MSE with respect to w and set it to zero:
 
-Gradient symbol: 
-
 $$\nabla_{w} MSE = \frac{-2}{n} X^T (Xw - y) = 0$$
 
 This gives us the optimal weights:
