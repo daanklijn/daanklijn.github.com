@@ -153,12 +153,18 @@ header {
 }
 
 table {
-	margin: 1em 0;
+	text-align: center;
+	border: 1px solid var(--color-gray-90);
+	border-collapse: collapse;
+	margin-left: auto;
+	margin-right: auto;
 }
 table td,
 table th {
-	padding-right: 1em;
+	padding: 8px 12px 8px 12px;
+	border: 1px solid var(--color-gray-90);
 }
+
 
 pre,
 code {
