@@ -123,15 +123,15 @@ We will cover how to find the optimal weights for a neural network in the next p
 
 To make a single prediction, we will first compute the output of the first hidden layer.
 
-$$ h^{(1)} = g(W^{(1)T}x + b^{(1)}) $$
+$$ a^{(1)} = g(W^{(1)T}x + b^{(1)}) $$
 
 Similarly we will compute the output of the second hidden layer by taking the output of the first hidden layer.
 
-$$ h^{(2)} = g(W^{(2)T}h^{(1)} + b^{(2)}) $$
+$$ a^{(2)} = g(W^{(2)T}h^{(1)} + b^{(2)}) $$
 
 And finally we compute the output of the output layer.
 
-$$ \hat{y} = W^{(3)}h^{(2)} + b^{(3)} $$
+$$ a^{(3)} = \hat{y} = W^{(3)}h^{(2)} + b^{(3)} $$
 
 ## Solving the XOR Problem using a Neural Networks
 
