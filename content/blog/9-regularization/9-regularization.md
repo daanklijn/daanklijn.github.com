@@ -89,7 +89,7 @@ One can decompose the Hessian matrix $H$ into $Q\Lambda Q^T$ where $\Lambda$ is 
 
 $$ \tilde{w} = Q \left( \Lambda + \lambda I \right)^{-1} \Lambda Q^T w^{\star}$$
 
-We can see that the regularization adds a constant $\lambda$ to the eigenvalues of $H$. Further derivation shows that each weight $\w_i$ is scaled by factor $\frac{\lambda_i}{\lambda_i + \lambda}$. When $\lambda_i$ is big, the factor gets close to $1$ and almost no scaling is applied. However, when $\lambda_i$ is small, the scaling factor gets small, and therefore the scaled eigenvalue as well. This basically highlights a nice property of L2 regularization: It shrinks unimportant eigenvalues (and therefore also shrinks unimportant properties of the dataset), while leaving the important ones mostly untouched.
+We can see that the regularization adds a constant $\lambda$ to the eigenvalues of $H$. Further derivation shows that each weight $w_i$ is scaled by factor $\frac{\lambda_i}{\lambda_i + \lambda}$. When $\lambda_i$ is big, the factor gets close to $1$ and almost no scaling is applied. However, when $\lambda_i$ is small, the scaling factor gets small, and therefore the scaled eigenvalue as well. This basically highlights a nice property of L2 regularization: It shrinks unimportant eigenvalues (and therefore also shrinks unimportant properties of the dataset), while leaving the important ones mostly untouched.
 
 
 
