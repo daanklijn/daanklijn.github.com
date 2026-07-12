@@ -1,0 +1,167 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js" eleventy:ignore></script>
+
+<style>
+  .momentum-demo .controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .momentum-demo .ctrl { display: flex; align-items: center; gap: 8px; }
+  .momentum-demo button {
+    padding: 8px 16px;
+    border: 1px solid #c3c2b7;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .momentum-demo button:hover { background: #f1efe8; }
+  .momentum-demo label { font-size: 14px; color: #52514e; }
+  .momentum-demo .val { font-size: 14px; font-weight: 600; min-width: 34px; }
+  .momentum-demo .panel {
+    background: #fff;
+    border: 1px solid #e1e0d9;
+    border-radius: 12px;
+    padding: 12px;
+    max-width: 860px;
+  }
+  .momentum-demo #plot { width: 100%; height: 560px; }
+</style>
+
+<div class="momentum-demo">
+  <div class="controls">
+    <button id="playBtn">&#9654; Play</button>
+    <button id="resetBtn">&#8635; Reset</button>
+    <div class="ctrl">
+      <label for="fric">Friction (damping)</label>
+      <input type="range" id="fric" min="0" max="30" step="1" value="0">
+      <span class="val" id="fricOut">0.0</span>
+    </div>
+  </div>
+  <div class="panel">
+    <div id="plot"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+// Valley: f(x, y) = 0.5*x^2 + 1.8*y^2  (steeper in y than in x)
+function f(x, y)  { return 0.5 * x * x + 1.8 * y * y; }
+function gx(x, y) { return x; }        // df/dx
+function gy(x, y) { return 3.6 * y; }  // df/dy
+
+// Surface grid
+const N = 41, xs = [], ys = [];
+for (let i = 0; i < N; i++) { xs.push(-3 + 6 * i / (N - 1)); ys.push(-3 + 6 * i / (N - 1)); }
+const zs = ys.map(y => xs.map(x => f(x, y)));
+
+// Simulation: Newton's second law with linear drag.
+//   acceleration a = (-grad f  -  c * v) / m
+//   v <- v + dt * a
+//   x <- x + dt * v
+// m = mass (inertia), c = damping coefficient (friction).
+const x0 = -2.6, y0 = 2.2;
+const steps = 420, dt = 0.055;
+
+function simulate(m, c) {
+  let x = x0, y = y0, vx = 0, vy = 0;
+  const p = [[x, y, f(x, y), 0, 0]];
+  for (let i = 0; i < steps; i++) {
+    const ax = (-gx(x, y) - c * vx) / m;
+    const ay = (-gy(x, y) - c * vy) / m;
+    vx += dt * ax;
+    vy += dt * ay;
+    x += dt * vx;
+    y += dt * vy;
+    p.push([x, y, f(x, y), vx, vy]);
+  }
+  return p;
+}
+
+const surf = {
+  type: 'surface', x: xs, y: ys, z: zs,
+  opacity: 0.85, showscale: false,
+  colorscale: [[0, '#e6f1fb'], [0.5, '#85b7eb'], [1, '#185fa5']],
+  contours: { z: { show: true, color: '#c9d8e8', width: 1, start: 0, end: 20, size: 2 } },
+  hoverinfo: 'skip'
+};
+
+const layout = {
+  margin: { l: 0, r: 0, t: 0, b: 0 },
+  paper_bgcolor: 'rgba(0,0,0,0)',
+  scene: {
+    xaxis: { title: 'x' },
+    yaxis: { title: 'y' },
+    zaxis: { title: 'height' },
+    camera: { eye: { x: 1.5, y: -1.6, z: 0.9 } },
+    aspectratio: { x: 1, y: 1, z: 0.55 }
+  }
+};
+
+const mass = 1.0;
+let fricC = 0.0;
+let path = simulate(mass, fricC);
+
+Plotly.newPlot('plot', [
+  surf,
+  { type: 'scatter3d', mode: 'lines',
+    x: [path[0][0]], y: [path[0][1]], z: [path[0][2] + 0.06],
+    line: { color: '#a32d2d', width: 5 }, hoverinfo: 'skip', name: 'path' },
+  { type: 'scatter3d', mode: 'markers',
+    x: [path[0][0]], y: [path[0][1]], z: [path[0][2] + 0.12],
+    marker: { size: 9, color: '#d03b3b' }, hoverinfo: 'skip', name: 'ball' }
+], layout, { displayModeBar: false, responsive: true });
+
+// Animation
+let frame = 0, timer = null;
+
+function draw(k) {
+  Plotly.restyle('plot', {
+    x: [path.slice(0, k + 1).map(q => q[0]), [path[k][0]]],
+    y: [path.slice(0, k + 1).map(q => q[1]), [path[k][1]]],
+    z: [path.slice(0, k + 1).map(q => q[2] + 0.06), [path[k][2] + 0.12]]
+  }, [1, 2]);
+  const momOut = document.getElementById('momOut');
+  if (momOut) {
+    const speed = Math.hypot(path[k][3], path[k][4]);
+    momOut.textContent = (mass * speed).toFixed(2);
+  }
+}
+
+function stop() {
+  clearInterval(timer);
+  timer = null;
+  playBtn.innerHTML = '&#9654; Play';
+}
+
+const playBtn = document.getElementById('playBtn');
+playBtn.onclick = () => {
+  if (timer) { stop(); return; }
+  if (frame >= steps) frame = 0;
+  playBtn.innerHTML = '&#10074;&#10074; Pause';
+  timer = setInterval(() => {
+    frame += 3;
+    if (frame >= steps) { frame = steps; draw(frame); stop(); return; }
+    draw(frame);
+  }, 30);
+};
+
+document.getElementById('resetBtn').onclick = () => { stop(); frame = 0; draw(0); };
+
+function rebuild() {
+  path = simulate(mass, fricC);
+  stop();
+  frame = 0;
+  draw(0);
+}
+
+const fricEl = document.getElementById('fric'), fricOut = document.getElementById('fricOut');
+fricEl.oninput = () => {
+  fricC = fricEl.value / 10;
+  fricOut.textContent = fricC.toFixed(1);
+  rebuild();
+};
+})();
+</script>
