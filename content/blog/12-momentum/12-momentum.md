@@ -28,27 +28,26 @@ $$ x_{t+1} = x_t + \left(1 - \frac{\mu h}{m}\right)(x_t - x_{t-1}) - \frac{h^2}{
 
 $$ x_{t+1} = x_t + \beta\ (x_t - x_{t-1}) - \eta\ \nabla f(x_t) $$
 
+Here $\beta$ controls how much a previous speed contributes to the downhill movement. As we have seen in the formula above, less friction usually means more momentum and the opposite way around.
 
-This interaction between the ball, the surface and the friction is visualized in the graph below. Note that without any friction the ball oscillates between the two walls of the valley. Once more friction is added the ball converges more cleanly to the bottom of the valley.
+This interaction between the ball, the surface and the momentum is visualized in the graph below. Note that once we increase momentum, the ball will converge faster to the lowest point of the surface. This is of course also a property of a good optimization algorithm.
 
 {% include "momentum-demo.html" %}
 
 
 ## Momentum for Gradient Descent
 
+In Polyak's 1964 paper "Some methods of speeding up the convergence of iteration methods" he introduces a method that speeds up the convergence of gradient descent, analogous to the physics of momentum described above. In his paper he therefore coined this method "the method of a small heavy sphere". Nowadays, more often referred to as the "heavy ball method".
+
 As we have seen before, a gradient descent step that updates the network weights $\theta$ is defined as:
 
 $$ \theta_{t+1} = \theta_t - \alpha\ \nabla L(\theta_t) $$
-
-Similar to the oscillations of the ball when there is no friction, the gradient descent algorithm may also oscillate against the walls of an optimization surface.
-
-In Polyak's 1964 paper "Some methods of speeding up the convergence of iteration methods" he introduces a method that speeds up the convergence of gradient descent, analogous to the physics of momentum described above. In his paper he therefore coined this method "the method of a small heavy sphere". Nowadays, more often referred to as the "heavy ball method".
 
 Polyak's paper proposes to add a second term to te gradient step, based on the previous two sets of weights.
 
 $$ \theta_{t+1} = \theta_t - \alpha\ \nabla L(\theta_t) + \beta (\theta_{t} - \theta_{t-1}) $$
 
-Note that this is pretty much identical to the discrete function we have derived above from the second law of motion. The term that Polyak adds is the analogue of the friction term in the physics equations above that was based on the velocity.
+Note that this is pretty much identical to the discrete function we have derived above from the second law of motion. The term that Polyak adds is the analogue of the momentum term in the physics equations above that is proportional to the velocity.
 
 Instead of updating the weights directly, it is more common to have a intermediary variable $ v_t = \theta_t - \theta_{t-1} $ that resembles the velocity instead. 
 
@@ -56,10 +55,9 @@ $$ v_{t+1} = \beta v_t - \alpha\ \nabla L(\theta_t) $$
 
 $$ \theta_{t+1} = \theta_t +  v_{t+1} $$
 
-From the physics point of view, increasing $\beta$ will decrease the friction and thus 
+Similar to the physics analogue, SGD with momentum tends to converge faster. Another nice property of this method is that it smooths out any oscillations in the gradient descent algorithm. As vanilla gradient descent only looks at the slope of the current gradient, it tends to overshoot and oscillate. Momentum, on the other hand, takes into account the velocity of the previous steps and therefore smoothes out the oscillations. 
 
-$$ \beta = 1 - \frac{\mu h}{m} $$
-
+An example of these benefits will be illustrated in the next section.
 
 ## Python implementation
 
@@ -74,7 +72,7 @@ def gradient_descent(start, lr=0.09, beta=0.0, steps=20):
         pos = pos + velocity
 ```
 
-We run gradient descent on a bowl-like problem surface with and without momentum. We can clearly see that the non-momentum version of the algorithm oscillates quite a bit. Once we add momentum by increasing the $\beta$ parameter, the algorithm converges much more smoothly.
+We run gradient descent on a bowl-like problem surface with and without momentum. We can clearly see that the non-momentum version of the algorithm oscillates quite a bit. Once we add momentum by increasing the $\beta$ parameter, the algorithm converges more quickly and also much more smoothly.
 
 <div class="img-container-big">
 <img src="./momentum.png" alt="">

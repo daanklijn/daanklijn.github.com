@@ -35,9 +35,9 @@
     <button id="playBtn">&#9654; Play</button>
     <button id="resetBtn">&#8635; Reset</button>
     <div class="ctrl">
-      <label for="fric">Friction (damping)</label>
-      <input type="range" id="fric" min="0" max="30" step="1" value="0">
-      <span class="val" id="fricOut">0.0</span>
+      <label for="mom">Momentum (&beta;)</label>
+      <input type="range" id="mom" min="0" max="99" step="1" value="90">
+      <span class="val" id="momOut">0.90</span>
     </div>
   </div>
   <div class="panel">
@@ -57,25 +57,22 @@ const N = 41, xs = [], ys = [];
 for (let i = 0; i < N; i++) { xs.push(-3 + 6 * i / (N - 1)); ys.push(-3 + 6 * i / (N - 1)); }
 const zs = ys.map(y => xs.map(x => f(x, y)));
 
-// Simulation: Newton's second law with linear drag.
-//   acceleration a = (-grad f  -  c * v) / m
-//   v <- v + dt * a
-//   x <- x + dt * v
-// m = mass (inertia), c = damping coefficient (friction).
+// Simulation: gradient descent with momentum.
+//   v <- beta * v - lr * grad f
+//   x <- x + v
+// beta = momentum coefficient (0 = plain gradient descent).
 const x0 = -2.6, y0 = 2.2;
-const steps = 420, dt = 0.055;
+const steps = 420, lr = 0.05;
 
-function simulate(m, c) {
+function simulate(beta) {
   let x = x0, y = y0, vx = 0, vy = 0;
-  const p = [[x, y, f(x, y), 0, 0]];
+  const p = [[x, y, f(x, y)]];
   for (let i = 0; i < steps; i++) {
-    const ax = (-gx(x, y) - c * vx) / m;
-    const ay = (-gy(x, y) - c * vy) / m;
-    vx += dt * ax;
-    vy += dt * ay;
-    x += dt * vx;
-    y += dt * vy;
-    p.push([x, y, f(x, y), vx, vy]);
+    vx = beta * vx - lr * gx(x, y);
+    vy = beta * vy - lr * gy(x, y);
+    x += vx;
+    y += vy;
+    p.push([x, y, f(x, y)]);
   }
   return p;
 }
@@ -100,9 +97,8 @@ const layout = {
   }
 };
 
-const mass = 1.0;
-let fricC = 0.0;
-let path = simulate(mass, fricC);
+let beta = 0.9;
+let path = simulate(beta);
 
 Plotly.newPlot('plot', [
   surf,
@@ -123,11 +119,6 @@ function draw(k) {
     y: [path.slice(0, k + 1).map(q => q[1]), [path[k][1]]],
     z: [path.slice(0, k + 1).map(q => q[2] + 0.06), [path[k][2] + 0.12]]
   }, [1, 2]);
-  const momOut = document.getElementById('momOut');
-  if (momOut) {
-    const speed = Math.hypot(path[k][3], path[k][4]);
-    momOut.textContent = (mass * speed).toFixed(2);
-  }
 }
 
 function stop() {
@@ -151,16 +142,16 @@ playBtn.onclick = () => {
 document.getElementById('resetBtn').onclick = () => { stop(); frame = 0; draw(0); };
 
 function rebuild() {
-  path = simulate(mass, fricC);
+  path = simulate(beta);
   stop();
   frame = 0;
   draw(0);
 }
 
-const fricEl = document.getElementById('fric'), fricOut = document.getElementById('fricOut');
-fricEl.oninput = () => {
-  fricC = fricEl.value / 10;
-  fricOut.textContent = fricC.toFixed(1);
+const momEl = document.getElementById('mom'), momOut = document.getElementById('momOut');
+momEl.oninput = () => {
+  beta = momEl.value / 100;
+  momOut.textContent = beta.toFixed(2);
   rebuild();
 };
 })();
