@@ -2,6 +2,7 @@
 title: Bayesian Linear Regression
 date: 2026-04-17
 tags: Deep Learning, Machine Learning
+id: 4
 ---
 
 {% set linearRegressionPost = "" %}

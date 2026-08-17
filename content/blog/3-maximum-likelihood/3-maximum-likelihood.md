@@ -3,6 +3,7 @@ title: Maximum Likelihood Estimation
 description: This is a post on My Blog about agile frameworks.
 date: 2026-04-10
 tags: Deep Learning, Machine Learning
+id: 3
 ---
 
 {% set linearRegressionPost = "" %}

@@ -2,6 +2,8 @@
 title: Regularization
 date: 2026-06-02
 tags: Deep Learning, Machine Learning
+id: 9
+
 ---
 
 {% set ridgeRegressionPost = "" %}

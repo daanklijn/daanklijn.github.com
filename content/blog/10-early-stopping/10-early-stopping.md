@@ -2,6 +2,8 @@
 title: Early Stopping
 date: 2026-06-09
 tags: Deep Learning, Machine Learning
+id: 10
+
 ---
 
 {% set ridgeRegressionPost = "" %}

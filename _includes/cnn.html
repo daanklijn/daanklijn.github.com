@@ -1,0 +1,359 @@
+<style>
+  .cnn-wrap{
+    --cnn-ink:#1c1f26;
+    --cnn-sub:#6b7280;
+    --cnn-line:#e4e7ec;
+    --cnn-paper:#ffffff;
+    --cnn-cell:#f7f8fa;
+    --cnn-accent:#3457d5;
+    --cnn-accent-soft:#e8ecfd;
+    --cnn-accent-line:#c2cbf7;
+    --cnn-out:#1f8a5f;
+    --cnn-out-soft:#e4f4ec;
+    --cnn-mono: "SFMono-Regular", "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --cnn-sans: "Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+
+    max-width:760px;
+    margin:0 auto;
+    padding:36px 24px 40px;
+    background:var(--cnn-paper);
+    font-family:var(--cnn-sans);
+    color:var(--cnn-ink);
+    box-sizing:border-box;
+  }
+
+  .cnn-wrap *{box-sizing:border-box;}
+
+  .cnn-eyebrow{
+    font-family:var(--cnn-mono);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--cnn-accent);
+    margin:0 0 6px;
+  }
+
+  .cnn-title{
+    font-size:19px;
+    font-weight:650;
+    letter-spacing:-0.01em;
+    margin:0 0 6px;
+    color:var(--cnn-ink);
+  }
+
+  .cnn-subtext{
+    font-size:13.5px;
+    color:var(--cnn-sub);
+    margin:0 0 30px;
+    line-height:1.5;
+  }
+
+  .cnn-diagram{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding:24px 4px 8px;
+  }
+
+  .cnn-lines{
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    overflow:visible;
+    pointer-events:none;
+  }
+
+  .cnn-lines line{
+    stroke:var(--cnn-accent-line);
+    stroke-width:1.2;
+  }
+
+  .cnn-stage-col{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:0 0 auto;
+  }
+
+  .cnn-col-label{
+    font-family:var(--cnn-mono);
+    font-size:10.5px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--cnn-sub);
+    text-align:center;
+    margin-top:14px;
+    line-height:1.4;
+  }
+
+  .cnn-col-label b{
+    display:block;
+    font-size:12px;
+    color:var(--cnn-ink);
+    font-weight:650;
+    letter-spacing:0;
+    text-transform:none;
+    margin-bottom:2px;
+  }
+
+  /* ---- input grid ---- */
+  .cnn-input-grid{
+    display:grid;
+    grid-template-columns:repeat(5,14px);
+    grid-template-rows:repeat(5,14px);
+    gap:2px;
+    padding:5px;
+    background:var(--cnn-line);
+    border-radius:8px;
+  }
+  .cnn-input-cell{
+    background:var(--cnn-cell);
+    border-radius:2px;
+  }
+
+  /* ---- conv feature map stack ---- */
+  .cnn-stack{
+    position:relative;
+    width:70px;
+    height:70px;
+  }
+  .cnn-fmap{
+    position:absolute;
+    display:grid;
+    grid-template-columns:repeat(3,12px);
+    grid-template-rows:repeat(3,12px);
+    gap:2px;
+    padding:4px;
+    background:var(--cnn-accent-soft);
+    border:1.4px solid var(--cnn-accent-line);
+    border-radius:7px;
+  }
+  .cnn-fmap-cell{
+    background:var(--cnn-paper);
+    border-radius:2px;
+  }
+  .cnn-fmap:nth-child(1){ top:16px; left:0; }
+  .cnn-fmap:nth-child(2){ top:8px; left:8px; }
+  .cnn-fmap:nth-child(3){ top:0; left:16px; }
+
+  /* ---- dense node columns ---- */
+  .cnn-nodes{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .cnn-node{
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--cnn-accent-soft);
+    border:1.6px solid var(--cnn-accent-line);
+  }
+  .cnn-node.cnn-node-out{
+    width:20px;
+    height:20px;
+    background:var(--cnn-out-soft);
+    border-color:var(--cnn-out);
+  }
+
+  .cnn-legend{
+    display:flex;
+    justify-content:center;
+    gap:22px;
+    flex-wrap:wrap;
+    margin-top:30px;
+  }
+  .cnn-legend-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-family:var(--cnn-mono);
+    font-size:11px;
+    color:var(--cnn-sub);
+  }
+  .cnn-swatch{
+    width:10px;
+    height:10px;
+    border-radius:3px;
+    display:inline-block;
+  }
+  .cnn-swatch.cnn-swatch-in{ background:var(--cnn-cell); box-shadow:inset 0 0 0 1.4px var(--cnn-line); }
+  .cnn-swatch.cnn-swatch-conv{ background:var(--cnn-accent-soft); box-shadow:inset 0 0 0 1.4px var(--cnn-accent-line); }
+  .cnn-swatch.cnn-swatch-fc{ border-radius:50%; background:var(--cnn-accent-soft); box-shadow:inset 0 0 0 1.4px var(--cnn-accent-line); }
+  .cnn-swatch.cnn-swatch-out{ border-radius:50%; background:var(--cnn-out-soft); box-shadow:inset 0 0 0 1.4px var(--cnn-out); }
+
+  .cnn-foot{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--cnn-sub);
+    margin-top:24px;
+    font-family:var(--cnn-mono);
+  }
+
+  @media (max-width:640px){
+    .cnn-diagram{
+      flex-wrap:wrap;
+      row-gap:34px;
+      justify-content:center;
+    }
+    .cnn-arrow-col{ transform:rotate(90deg); }
+  }
+
+  .cnn-arrow-col{
+    font-family:var(--cnn-mono);
+    font-size:18px;
+    color:var(--cnn-sub);
+    flex:0 0 auto;
+    padding:0 2px;
+  }
+</style>
+
+<div class="cnn-wrap" id="cnn-root">
+  <div class="cnn-diagram" data-cnn="diagram">
+    <svg class="cnn-lines" data-cnn="lines"></svg>
+
+    <div class="cnn-stage-col">
+      <div class="cnn-input-grid" data-cnn="inputGrid"></div>
+      <div class="cnn-col-label"><b>Input</b>5&times;5</div>
+    </div>
+
+    <div class="cnn-arrow-col">&rarr;</div>
+
+    <div class="cnn-stage-col">
+      <div class="cnn-stack" data-cnn="fmapStack"></div>
+      <div class="cnn-col-label"><b>Conv layer</b>3 filters, 3&times;3</div>
+    </div>
+
+    <div class="cnn-arrow-col">&rarr;</div>
+
+    <div class="cnn-stage-col">
+      <div class="cnn-nodes" data-cnn="fcNodes"></div>
+      <div class="cnn-col-label"><b>Fully connected</b>6 units</div>
+    </div>
+
+    <div class="cnn-arrow-col">&rarr;</div>
+
+    <div class="cnn-stage-col">
+      <div class="cnn-nodes" data-cnn="outNode"></div>
+      <div class="cnn-col-label"><b>Output</b>1 unit</div>
+    </div>
+  </div>
+
+  <div class="cnn-legend">
+    <span class="cnn-legend-item"><span class="cnn-swatch cnn-swatch-in"></span>input pixels</span>
+    <span class="cnn-legend-item"><span class="cnn-swatch cnn-swatch-conv"></span>feature maps</span>
+    <span class="cnn-legend-item"><span class="cnn-swatch cnn-swatch-fc"></span>dense units</span>
+    <span class="cnn-legend-item"><span class="cnn-swatch cnn-swatch-out"></span>output</span>
+  </div>
+
+  <p class="cnn-foot">5&times;5 input &middot; conv 3&times;3&times;3 &middot; flatten &middot; dense(6) &middot; dense(1)</p>
+</div>
+
+<script>
+(function(){
+  const root = document.getElementById('cnn-root');
+  if(!root) return;
+
+  const q = (name) => root.querySelector('[data-cnn="' + name + '"]');
+
+  // build 5x5 input grid
+  const inputGrid = q('inputGrid');
+  for(let i=0;i<25;i++){
+    const el = document.createElement('div');
+    el.className = 'cnn-input-cell';
+    inputGrid.appendChild(el);
+  }
+
+  // build 3 stacked 3x3 feature maps
+  const fmapStack = q('fmapStack');
+  for(let f=0; f<3; f++){
+    const fmap = document.createElement('div');
+    fmap.className = 'cnn-fmap';
+    for(let i=0;i<9;i++){
+      const cell = document.createElement('div');
+      cell.className = 'cnn-fmap-cell';
+      fmap.appendChild(cell);
+    }
+    fmapStack.appendChild(fmap);
+  }
+
+  // build 6 fully connected nodes
+  const fcNodes = q('fcNodes');
+  const fcCount = 6;
+  for(let i=0;i<fcCount;i++){
+    const node = document.createElement('div');
+    node.className = 'cnn-node';
+    fcNodes.appendChild(node);
+  }
+
+  // build single output node
+  const outNodeWrap = q('outNode');
+  const outNode = document.createElement('div');
+  outNode.className = 'cnn-node cnn-node-out';
+  outNodeWrap.appendChild(outNode);
+
+  const diagram = q('diagram');
+  const svg = q('lines');
+
+  function drawLines(){
+    // clear
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+    const diagramRect = diagram.getBoundingClientRect();
+
+    function centerOf(el){
+      const r = el.getBoundingClientRect();
+      return {
+        x: r.left + r.width/2 - diagramRect.left,
+        y: r.top + r.height/2 - diagramRect.top
+      };
+    }
+
+    const fmapEls = Array.from(fmapStack.querySelectorAll('.cnn-fmap'));
+    const fcEls = Array.from(fcNodes.querySelectorAll('.cnn-node'));
+    const outEl = outNode;
+
+    // connect each feature map to each fc node (abstracted "flatten + dense")
+    fmapEls.forEach(fm=>{
+      const p1 = centerOf(fm);
+      fcEls.forEach(fc=>{
+        const p2 = centerOf(fc);
+        addLine(p1,p2);
+      });
+    });
+
+    // connect each fc node to the output node
+    fcEls.forEach(fc=>{
+      const p1 = centerOf(fc);
+      const p2 = centerOf(outEl);
+      addLine(p1,p2);
+    });
+
+    function addLine(p1,p2){
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1', p1.x);
+      line.setAttribute('y1', p1.y);
+      line.setAttribute('x2', p2.x);
+      line.setAttribute('y2', p2.y);
+      svg.appendChild(line);
+    }
+  }
+
+  function refresh(){
+    // ensure svg fills diagram box for coordinate math
+    svg.setAttribute('width', diagram.clientWidth);
+    svg.setAttribute('height', diagram.clientHeight);
+    drawLines();
+  }
+
+  window.addEventListener('resize', refresh);
+  // run after layout settles
+  requestAnimationFrame(refresh);
+  window.addEventListener('load', refresh);
+})();
+</script>

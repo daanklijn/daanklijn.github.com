@@ -2,6 +2,8 @@
 title: Building a Deep Learning library
 date: 2026-05-24
 tags: Deep Learning, Machine Learning
+id: 8
+
 ---
 
 {% set linearRegressionPost = "" %}

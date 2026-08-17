@@ -3,6 +3,7 @@ title: Linear Regression
 description: This is a post on My Blog about agile frameworks.
 date: 2026-04-02
 tags: Deep Learning, Machine Learning
+id: 1
 ---
 
 During my university years, I've had many courses on machine learning, and even specialized in it during my masters. To freshen up my knowledge, I decided to read a book on the subject.  I'm currently reading [*Deep Learning*](https://www.deeplearningbook.org/) by Ian Goodfellow, Yoshua Bengio and Aaron Courville. Throughout the next couple of blog posts, I'll be writing about the topics I read about in the book.

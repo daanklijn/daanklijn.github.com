@@ -1,0 +1,449 @@
+<style>
+  .conv2x2-wrap{
+    --conv2x2-ink:#1c1f26;
+    --conv2x2-sub:#6b7280;
+    --conv2x2-line:#e4e7ec;
+    --conv2x2-paper:#ffffff;
+    --conv2x2-cell:#f7f8fa;
+    --conv2x2-accent:#3457d5;
+    --conv2x2-accent-soft:#e8ecfd;
+    --conv2x2-accent-line:#c2cbf7;
+    --conv2x2-mono: "SFMono-Regular", "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --conv2x2-sans: "Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+
+    max-width:640px;
+    margin:0 auto;
+    padding:36px 24px 40px;
+    background:var(--conv2x2-paper);
+    font-family:var(--conv2x2-sans);
+    color:var(--conv2x2-ink);
+    box-sizing:border-box;
+  }
+
+  .conv2x2-wrap *{box-sizing:border-box;}
+
+  .conv2x2-eyebrow{
+    font-family:var(--conv2x2-mono);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--conv2x2-accent);
+    margin:0 0 6px;
+  }
+
+  .conv2x2-title{
+    font-size:19px;
+    font-weight:650;
+    letter-spacing:-0.01em;
+    margin:0 0 6px;
+    color:var(--conv2x2-ink);
+  }
+
+  .conv2x2-subtext{
+    font-size:13.5px;
+    color:var(--conv2x2-sub);
+    margin:0 0 26px;
+    line-height:1.5;
+  }
+
+  .conv2x2-stage{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:34px;
+    flex-wrap:wrap;
+    padding:20px 10px 8px;
+  }
+
+  .conv2x2-panel-label{
+    font-family:var(--conv2x2-mono);
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--conv2x2-sub);
+    text-align:center;
+    margin-bottom:10px;
+  }
+
+  .conv2x2-grid3{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(3,52px);
+    grid-template-rows:repeat(3,52px);
+    gap:4px;
+    padding:4px;
+    background:var(--conv2x2-line);
+    border-radius:10px;
+  }
+
+  .conv2x2-grid2out{
+    display:grid;
+    grid-template-columns:repeat(2,52px);
+    grid-template-rows:repeat(2,52px);
+    gap:4px;
+    padding:4px;
+    background:var(--conv2x2-line);
+    border-radius:10px;
+  }
+
+  .conv2x2-cell{
+    background:var(--conv2x2-cell);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--conv2x2-mono);
+    font-size:15px;
+    font-weight:600;
+    color:var(--conv2x2-ink);
+    transition:background .35s ease, color .35s ease, box-shadow .35s ease;
+  }
+
+  .conv2x2-out-cell{
+    background:var(--conv2x2-cell);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--conv2x2-mono);
+    font-size:15px;
+    font-weight:600;
+    color:var(--conv2x2-sub);
+    transition:background .35s ease, color .35s ease, box-shadow .4s ease, transform .35s ease;
+  }
+
+  .conv2x2-out-cell.conv2x2-filled{
+    background:var(--conv2x2-accent-soft);
+    color:var(--conv2x2-accent);
+    box-shadow:inset 0 0 0 1.5px var(--conv2x2-accent-line);
+  }
+
+  .conv2x2-out-cell.conv2x2-pop{
+    animation:conv2x2-pop .45s ease;
+  }
+
+  @keyframes conv2x2-pop{
+    0%{transform:scale(1);}
+    45%{transform:scale(1.12);}
+    100%{transform:scale(1);}
+  }
+
+  .conv2x2-kernel{
+    position:absolute;
+    width:108px;
+    height:108px;
+    border:2px solid var(--conv2x2-accent);
+    border-radius:8px;
+    background:rgba(52,87,213,0.07);
+    box-shadow:0 0 0 3px rgba(52,87,213,0.06);
+    pointer-events:none;
+    transition:transform .55s cubic-bezier(.65,0,.35,1);
+    top:4px;
+    left:4px;
+  }
+
+  .conv2x2-cell.conv2x2-in-kernel{
+    color:var(--conv2x2-accent);
+  }
+
+  .conv2x2-math{
+    font-family:var(--conv2x2-mono);
+    font-size:13.5px;
+    color:var(--conv2x2-sub);
+    text-align:center;
+    min-height:20px;
+    margin-top:22px;
+    letter-spacing:.01em;
+  }
+
+  .conv2x2-math .conv2x2-val{
+    color:var(--conv2x2-accent);
+    font-weight:650;
+  }
+
+  .conv2x2-arrow{
+    font-family:var(--conv2x2-mono);
+    font-size:20px;
+    color:var(--conv2x2-sub);
+    padding-top:14px;
+  }
+
+  .conv2x2-controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-top:30px;
+  }
+
+  .conv2x2-btn{
+    font-family:var(--conv2x2-sans);
+    font-size:13px;
+    font-weight:600;
+    color:var(--conv2x2-paper);
+    background:var(--conv2x2-accent);
+    border:none;
+    padding:9px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:opacity .2s ease, transform .15s ease;
+  }
+
+  .conv2x2-btn:hover{opacity:.88;}
+  .conv2x2-btn:active{transform:scale(.97);}
+
+  .conv2x2-btn-ghost{
+    background:transparent;
+    color:var(--conv2x2-sub);
+    box-shadow:inset 0 0 0 1.5px var(--conv2x2-line);
+  }
+  .conv2x2-btn-ghost:hover{
+    color:var(--conv2x2-ink);
+    box-shadow:inset 0 0 0 1.5px var(--conv2x2-sub);
+  }
+
+  .conv2x2-step-dots{
+    display:flex;
+    gap:6px;
+    justify-content:center;
+    margin-top:16px;
+  }
+
+  .conv2x2-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--conv2x2-line);
+    transition:background .25s ease, transform .25s ease;
+  }
+  .conv2x2-dot.conv2x2-on{
+    background:var(--conv2x2-accent);
+    transform:scale(1.25);
+  }
+
+  .conv2x2-foot{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--conv2x2-sub);
+    margin-top:26px;
+    font-family:var(--conv2x2-mono);
+  }
+
+  @media (max-width:480px){
+    .conv2x2-stage{gap:18px;}
+    .conv2x2-grid3{grid-template-columns:repeat(3,42px);grid-template-rows:repeat(3,42px);}
+    .conv2x2-kernel{width:88px;height:88px;}
+    .conv2x2-grid2out{grid-template-columns:repeat(2,42px);grid-template-rows:repeat(2,42px);}
+  }
+</style>
+
+<div class="conv2x2-wrap" id="conv2x2-root">
+  <div class="conv2x2-stage">
+    <div>
+      <div class="conv2x2-panel-label">Input (3&times;3)</div>
+      <div class="conv2x2-grid3" data-conv2x2="inputGrid"></div>
+    </div>
+
+    <div class="conv2x2-arrow">&rarr;</div>
+
+    <div>
+      <div class="conv2x2-panel-label">Output (2&times;2)</div>
+      <div class="conv2x2-grid2out" data-conv2x2="outputGrid"></div>
+    </div>
+  </div>
+
+  <p class="conv2x2-math" data-conv2x2="mathLine">&nbsp;</p>
+
+  <div class="conv2x2-step-dots" data-conv2x2="stepDots"></div>
+
+  <div class="conv2x2-controls">
+    <button class="conv2x2-btn conv2x2-btn-ghost" data-conv2x2="replayBtn">Replay</button>
+    <button class="conv2x2-btn" data-conv2x2="playBtn">Pause</button>
+  </div>
+
+  <p class="conv2x2-foot">kernel = [[1, 0], [0, -1]] &middot; stride 1</p>
+</div>
+
+<script>
+(function(){
+  const root = document.getElementById('conv2x2-root');
+  if(!root) return;
+
+  const q = (name) => root.querySelector('[data-conv2x2="' + name + '"]');
+
+  // 3x3 input image values
+  const input = [
+    [4, 1, 2],
+    [0, 3, 1],
+    [2, 1, 5]
+  ];
+
+  // 2x2 kernel weights
+  const kernel = [
+    [1, 0],
+    [0, -1]
+  ];
+
+  // The four top-left positions the 2x2 kernel can sit at over a 3x3 image
+  const positions = [
+    {r:0,c:0}, {r:0,c:1},
+    {r:1,c:0}, {r:1,c:1}
+  ];
+
+  const GAP = 4;
+
+  function cellSize(){
+    const first = inputGrid.querySelector('.conv2x2-cell');
+    return first ? first.getBoundingClientRect().width : 52;
+  }
+
+  const inputGrid = q('inputGrid');
+  const outputGrid = q('outputGrid');
+  const kernelEl = document.createElement('div');
+  kernelEl.className = 'conv2x2-kernel';
+  inputGrid.appendChild(kernelEl);
+
+  // build input cells
+  const inputCells = [];
+  for(let r=0;r<3;r++){
+    inputCells.push([]);
+    for(let c=0;c<3;c++){
+      const el = document.createElement('div');
+      el.className = 'conv2x2-cell';
+      el.textContent = input[r][c];
+      inputGrid.appendChild(el);
+      inputCells[r].push(el);
+    }
+  }
+
+  // build output cells (in DOM order: 0,0 / 0,1 / 1,0 / 1,1)
+  const outputCells = [];
+  positions.forEach(()=>{
+    const el = document.createElement('div');
+    el.className = 'conv2x2-out-cell';
+    el.textContent = '';
+    outputGrid.appendChild(el);
+    outputCells.push(el);
+  });
+
+  const dotsWrap = q('stepDots');
+  const dots = [];
+  positions.forEach(()=>{
+    const d = document.createElement('div');
+    d.className = 'conv2x2-dot';
+    dotsWrap.appendChild(d);
+    dots.push(d);
+  });
+
+  const mathLine = q('mathLine');
+  const playBtn = q('playBtn');
+  const replayBtn = q('replayBtn');
+
+  function clearKernelHighlight(){
+    inputCells.flat().forEach(el => el.classList.remove('conv2x2-in-kernel'));
+  }
+
+  function positionKernel(r,c){
+    const size = cellSize();
+    const step = size + GAP;
+    kernelEl.style.width = (size*2 + GAP) + 'px';
+    kernelEl.style.height = (size*2 + GAP) + 'px';
+    kernelEl.style.transform = `translate(${c*step}px, ${r*step}px)`;
+  }
+
+  function computeAt(r,c){
+    let sum = 0;
+    let terms = [];
+    for(let i=0;i<2;i++){
+      for(let j=0;j<2;j++){
+        const v = input[r+i][c+j];
+        const w = kernel[i][j];
+        sum += v*w;
+        terms.push(`${v}\u00d7${w}`);
+      }
+    }
+    return {sum, terms};
+  }
+
+  let step = 0;
+  let timer = null;
+  let playing = true;
+  const STEP_MS = 1500;
+
+  function renderStep(idx){
+    const {r,c} = positions[idx];
+    positionKernel(r,c);
+
+    clearKernelHighlight();
+    for(let i=0;i<2;i++){
+      for(let j=0;j<2;j++){
+        inputCells[r+i][c+j].classList.add('conv2x2-in-kernel');
+      }
+    }
+
+    dots.forEach((d,i)=> d.classList.toggle('conv2x2-on', i===idx));
+
+    const {sum, terms} = computeAt(r,c);
+    mathLine.innerHTML = `${terms.join(' + ')} = <span class="conv2x2-val">${sum}</span>`;
+
+    window.setTimeout(()=>{
+      const oc = outputCells[idx];
+      oc.textContent = sum;
+      oc.classList.add('conv2x2-filled');
+      oc.classList.remove('conv2x2-pop');
+      void oc.offsetWidth; // restart animation
+      oc.classList.add('conv2x2-pop');
+    }, 380);
+  }
+
+  function resetOutputs(){
+    outputCells.forEach(el=>{
+      el.textContent='';
+      el.classList.remove('conv2x2-filled','conv2x2-pop');
+    });
+    dots.forEach(d=>d.classList.remove('conv2x2-on'));
+    mathLine.innerHTML = '&nbsp;';
+  }
+
+  function tick(){
+    renderStep(step);
+    step = (step+1) % positions.length;
+    if(step === 0){
+      timer = setTimeout(()=>{
+        resetOutputs();
+        timer = setTimeout(tick, 250);
+      }, STEP_MS + 500);
+    } else {
+      timer = setTimeout(tick, STEP_MS);
+    }
+  }
+
+  function start(){
+    playing = true;
+    playBtn.textContent = 'Pause';
+    tick();
+  }
+
+  function stop(){
+    playing = false;
+    playBtn.textContent = 'Play';
+    clearTimeout(timer);
+  }
+
+  playBtn.addEventListener('click', ()=>{
+    if(playing){ stop(); }
+    else { start(); }
+  });
+
+  replayBtn.addEventListener('click', ()=>{
+    clearTimeout(timer);
+    step = 0;
+    resetOutputs();
+    if(!playing){ playing = true; playBtn.textContent='Pause'; }
+    tick();
+  });
+
+  positionKernel(0,0);
+  start();
+})();
+</script>

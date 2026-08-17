@@ -2,6 +2,7 @@
 title: Backpropagation
 date: 2026-05-14
 tags: Deep Learning, Machine Learning
+id: 7
 ---
 
 {% set linearRegressionPost = "" %}

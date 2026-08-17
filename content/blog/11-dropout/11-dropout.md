@@ -2,6 +2,7 @@
 title: Dropout
 date: 2026-06-09
 tags: Deep Learning, Machine Learning
+id: 11
 ---
 
 {% set ridgeRegressionPost = "" %}

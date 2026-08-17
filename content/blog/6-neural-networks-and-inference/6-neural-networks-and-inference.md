@@ -2,6 +2,8 @@
 title: Neural Networks & Inference
 date: 2026-05-13
 tags: Deep Learning, Machine Learning
+id: 6
+
 ---
 
 {% set linearRegressionPost = "" %}

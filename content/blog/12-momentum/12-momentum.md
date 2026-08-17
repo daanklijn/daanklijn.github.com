@@ -2,6 +2,7 @@
 title: Momentum
 date: 2026-07-11
 tags: Deep Learning, Machine Learning
+id: 12
 ---
 
 Before we focus on this posts's subject, we will first take a small detour and discuss physics.

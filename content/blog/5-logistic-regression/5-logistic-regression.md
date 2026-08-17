@@ -2,6 +2,8 @@
 title: Logistic Regression
 date: 2026-04-18
 tags: Deep Learning, Machine Learning
+id: 5
+
 ---
 
 {% set linearRegressionPost = "" %}
