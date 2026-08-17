@@ -82,4 +82,6 @@ We run gradient descent on a bowl-like problem surface with and without momentum
 
 A Jupyter notebook containing the full code can be found <a href="/files/notebook_momentum.ipynb" download>here</a>.
 
+<div class="footnote">
 $*$ For the sake of example, we will assume that the friction is viscous. 
+</div>
